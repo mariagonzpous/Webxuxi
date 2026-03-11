@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sergi & Maria</title>
+  <style>
+    :root{
+      --bg1:#ffd6df;
+      --bg2:#ffc3d2;
+      --card:#fff8fb;
+      --accent:#e95c8a;
+      --accent-dark:#cc3f70;
+      --text:#6a3a49;
+      --border:#e48aa7;
+      --shadow:0 12px 30px rgba(211, 88, 129, .18);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.65), transparent 18%),
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,.45), transparent 20%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .floating-hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+    .heart{
+      position:absolute;
+      width:18px;
+      height:18px;
+      background:#ff6b92;
+      transform:rotate(45deg);
+      opacity:.22;
+      animation:float 14s linear infinite;
+      border-radius:4px;
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      background:#ff6b92;
+      border-radius:50%;
+    }
+    .heart::before{left:-9px}
+    .heart::after{top:-9px}
+    @keyframes float{
+      from{transform:translateY(120vh) rotate(45deg) scale(.8);opacity:0}
+      10%,90%{opacity:.25}
+      to{transform:translateY(-20vh) rotate(405deg) scale(1.2);opacity:0}
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(10px);
+      background:rgba(255, 232, 239, .68);
+      border-bottom:1px solid rgba(228,138,167,.45);
+    }
+
+    .nav{
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 18px;
+    }
+
+    .brand{
+      font-size:1.3rem;
+      font-weight:800;
+      color:var(--accent-dark);
+      white-space:nowrap;
+    }
+
+    .menu{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .menu a{
+      text-decoration:none;
+      color:var(--accent-dark);
+      background:#fff;
+      border:1px solid #f3afc5;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.95rem;
+      font-weight:700;
+      box-shadow:var(--shadow);
+      transition:.25s ease;
+    }
+    .menu a:hover{transform:translateY(-2px); background:#ffe6ef}
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width:1200px;
+      margin:auto;
+      padding:28px 18px 60px;
+    }
+
+    section{
+      scroll-margin-top:90px;
+      margin:26px 0;
+    }
+
+    .card{
+      background:rgba(255,248,251,.9);
+      border:2px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+    }
+
+    h1,h2,h3{
+      margin:0 0 12px;
+      text-align:center;
+      color:var(--accent-dark);
+    }
+    h1{
+      font-size:clamp(2.3rem, 5vw, 4.2rem);
+      line-height:1.05;
+    }
+    h2{
+      font-size:clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom:20px;
+    }
+    h3{font-size:1.25rem}
+    p{line-height:1.6}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .9fr;
+      gap:28px;
+      align-items:center;
+      min-height:72vh;
+    }
+
+    .hero .subtitle{
+      font-size:1.1rem;
+      text-align:center;
+      max-width:620px;
+      margin:12px auto 22px;
+    }
+
+    .pill{
+      display:inline-block;
+      background:#fff;
+      border:1px solid #f1b7ca;
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:700;
+      box-shadow:var(--shadow);
+      color:var(--accent-dark);
+    }
+
+    .center{text-align:center}
+
+    .hero-gallery{
+      position:relative;
+      min-height:360px;
+      display:grid;
+      place-items:center;
+    }
+
+    .bubble{
+      position:absolute;
+      overflow:hidden;
+      border-radius:50%;
+      border:5px solid #fff;
+      box-shadow:var(--shadow);
+      background:#ffe6ee;
+    }
+    .bubble img{width:100%;height:100%;object-fit:cover;display:block}
+    .b1{width:250px;height:250px;position:relative}
+    .b2{width:95px;height:95px;left:4%;top:12%}
+    .b3{width:115px;height:115px;right:2%;top:3%}
+    .b4{width:90px;height:90px;right:12%;bottom:5%}
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      background:linear-gradient(180deg, #f37aa1, var(--accent));
+      color:#fff;
+      padding:13px 22px;
+      border-radius:999px;
+      font-weight:800;
+      letter-spacing:.2px;
+      box-shadow:0 10px 20px rgba(233,92,138,.25);
+      transition:.25s ease;
+    }
+    .btn:hover{transform:translateY(-2px) scale(1.01)}
+    .btn.secondary{
+      background:#fff;
+      color:var(--accent-dark);
+      border:1px solid #f3afc5;
+      box-shadow:var(--shadow);
+    }
+
+    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:18px}
+
+    .album-cat, .song-card, .coupon-card{
+      background:#fff;
+      border:1px solid #f4bbce;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .album-cat img{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+      border-radius:20px;
+      margin-bottom:12px;
+    }
+
+    .counter-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+      margin-top:18px;
+    }
+    .counter-box{
+      background:#fff;
+      border-radius:22px;
+      padding:16px 10px;
+      border:1px solid #f4bbce;
+      text-align:center;
+    }
+    .counter-box strong{
+      display:block;
+      font-size:1.7rem;
+      color:var(--accent-dark);
+    }
+
+    .letter-box{
+      max-width:760px;
+      margin:0 auto;
+      text-align:center;
+    }
+
+    .dedication{
+      max-width:700px;
+      margin:0 auto;
+    }
+    textarea{
+      width:100%;
+      min-height:140px;
+      resize:vertical;
+      border-radius:18px;
+      border:1px solid #ebb1c6;
+      padding:16px;
+      font:inherit;
+      color:var(--text);
+      background:#fff;
+      margin:10px 0 14px;
+    }
+
+    .whatsapp-preview{
+      margin-top:16px;
+      padding:16px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid #f4bbce;
+      text-align:left;
+    }
+
+    .puzzle-wrap{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:22px;
+      align-items:start;
+    }
+    .puzzle-board{
+      width:min(100%, 460px);
+      aspect-ratio:1/1;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:6px;
+      margin:0 auto;
+    }
+    .puzzle-piece{
+      border:none;
+      border-radius:14px;
+      overflow:hidden;
+      background-size:300% 300%;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      min-height:110px;
+    }
+    .puzzle-piece.empty{
+      background:#ffe4ed;
+      border:2px dashed #e6a4bb;
+      cursor:default;
+    }
+    .reference-img{
+      width:100%;
+      max-width:280px;
+      border-radius:22px;
+      border:4px solid #fff;
+      box-shadow:var(--shadow);
+      display:block;
+      margin:0 auto 14px;
+      object-fit:cover;
+    }
+
+    .roulette-layout{
+      display:grid;
+      grid-template-columns:340px 1fr;
+      gap:24px;
+      align-items:center;
+    }
+    .wheel-wrap{position:relative; width:300px; margin:auto}
+    .pointer{
+      width:0;height:0;
+      border-left:18px solid transparent;
+      border-right:18px solid transparent;
+      border-top:28px solid var(--accent-dark);
+      margin:0 auto -8px;
+      position:relative;
+      z-index:2;
+      filter:drop-shadow(0 6px 8px rgba(0,0,0,.15));
+    }
+    canvas#wheel{
+      width:300px;height:300px;
+      display:block;
+      background:#fff;
+      border-radius:50%;
+      box-shadow:var(--shadow);
+      border:8px solid #fff;
+      transition:transform 4.7s cubic-bezier(.16,.94,.23,1);
+    }
+    .result-box{
+      background:#fff;
+      border:1px solid #f4bbce;
+      border-radius:24px;
+      padding:18px;
+      min-height:170px;
+      box-shadow:var(--shadow);
+    }
+
+    .song-card img{
+      width:90px; height:90px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 10px; border:4px solid #ffe0ea;
+    }
+    .song-card audio{width:100%; margin-top:10px}
+    .muted{opacity:.8; font-size:.95rem}
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(86,26,46,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:100;
+    }
+    .modal.show{display:flex}
+    .modal-content{
+      width:min(900px, 100%);
+      max-height:90vh;
+      overflow:auto;
+      background:var(--card);
+      border:2px solid var(--border);
+      border-radius:30px;
+      padding:24px;
+      position:relative;
+      box-shadow:var(--shadow);
+    }
+    .close{
+      position:absolute;
+      right:16px;
+      top:12px;
+      background:none;
+      border:none;
+      font-size:1.7rem;
+      cursor:pointer;
+      color:var(--accent-dark);
+    }
+    .photo-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+    .photo-grid img{
+      width:100%;
+      aspect-ratio:4/5;
+      object-fit:cover;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .footer-note{
+      margin-top:24px;
+      font-size:.95rem;
+      background:#fff;
+      border:1px dashed #ebb1c6;
+      padding:15px;
+      border-radius:18px;
+    }
+
+    @media (max-width: 920px){
+      .hero,.grid-3,.grid-2,.roulette-layout,.puzzle-wrap{grid-template-columns:1fr}
+      .counter-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-gallery{min-height:310px}
+      .b1{width:210px;height:210px}
+      .b2{width:80px;height:80px}
+      .b3{width:90px;height:90px}
+      .b4{width:78px;height:78px}
+      .menu{justify-content:center}
+      .nav{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-hearts" id="hearts"></div>
+
+  <header>
+    <nav class="nav">
+      <div class="brand">💗 Nuestra web</div>
+      <div class="menu">
+        <a href="#portada">Portada</a>
+        <a href="#album">Álbum</a>
+        <a href="#tiempo">Tiempo</a>
+        <a href="#carta">Carta</a>
+        <a href="#dedicatoria">Dedicatoria</a>
+        <a href="#rompecabezas">Rompecabezas</a>
+        <a href="#ruleta">Ruleta</a>
+        <a href="#playlist">Playlist</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section id="portada">
+      <div class="card hero">
+        <div class="center">
+          <span class="pill">Te amo</span>
+          <h1>Sergi &amp; Maria</h1>
+          <p class="subtitle">
+            Una web hecha con mucho amor, recuerdos bonitos y pequeñas sorpresas para ti. 💞
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a class="btn" href="#album">Ver recuerdos</a>
+            <a class="btn secondary" href="#playlist">Escuchar canciones</a>
+          </div>
+        </div>
+
+        <div class="hero-gallery">
+          <!-- CAMBIA ESTAS FOTOS POR LAS TUYAS: sustituye las rutas dentro de src -->
+          <div class="bubble b2"><img src="fotos/foto1.jpg" alt="Foto pareja 1"></div>
+          <div class="bubble b1"><img src="fotos/foto2.jpg" alt="Foto principal"></div>
+          <div class="bubble b3"><img src="fotos/foto3.jpg" alt="Foto pareja 2"></div>
+          <div class="bubble b4"><img src="fotos/foto4.jpg" alt="Foto pareja 3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="album">
+      <div class="card">
+        <h2>Álbum de fotos</h2>
+        <div class="grid-3" id="albumCategories"></div>
+      </div>
+    </section>
+
+    <section id="tiempo">
+      <div class="card">
+        <h2>Tiempo desde que estamos juntos</h2>
+        <p class="center muted">Cada segundo contigo cuenta. ✨</p>
+        <div class="counter-grid" id="counter"></div>
+      </div>
+    </section>
+
+    <section id="carta">
+      <div class="card letter-box">
+        <h2>Carta para ti</h2>
+        <p>He preparado una carta para que la abras cuando quieras.</p>
+        <button class="btn" id="openLetter">Leer carta</button>
+      </div>
+    </section>
+
+    <section id="dedicatoria">
+      <div class="card dedication">
+        <h2>Dedicatoria</h2>
+        <p class="center">Escríbeme algo bonito y se abrirá WhatsApp con tu mensaje.</p>
+        <label for="dedicationText"><strong>Tu mensaje</strong></label>
+        <textarea id="dedicationText"></textarea>
+        <div class="center">
+          <button class="btn" id="sendWhatsapp">Enviar mensaje</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="rompecabezas">
+      <div class="card">
+        <h2>Rompecabezas de amor</h2>
+        <div class="puzzle-wrap">
+          <div>
+            <div class="center" style="margin-bottom:12px">
+              <button class="btn" id="shufflePuzzle">Mezclar piezas</button>
+            </div>
+            <div class="puzzle-board" id="puzzleBoard"></div>
+            <p class="center muted" id="puzzleStatus">Ordena la foto moviendo las piezas.</p>
+          </div>
+          <div>
+            <h3>Referencia</h3>
+            <!-- CAMBIA ESTA FOTO POR LA QUE QUIERAS USAR EN EL ROMPECABEZAS -->
+            <img class="reference-img" id="puzzleReference" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Referencia puzzle">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ruleta">
+      <div class="card">
+        <h2>Ruleta de amor</h2>
+        <div class="roulette-layout">
+          <div class="wheel-wrap center">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="300" height="300"></canvas>
+            <div style="margin-top:14px">
+              <button class="btn" id="spinBtn">Girar ruleta</button>
+            </div>
+          </div>
+          <div>
+            <div class="result-box" id="couponResult">
+              <h3>Cupones sorpresa</h3>
+              <p>Aquí aparecerá el premio cuando la ruleta se pare 💘</p>
+            </div>
+            <div style="height:14px"></div>
+            <div class="grid-2" id="couponList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="playlist">
+      <div class="card">
+        <h2>Playlist para ti</h2>
+        <div class="grid-3" id="playlistGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="albumModal">
+    <div class="modal-content">
+      <button class="close" data-close="albumModal">×</button>
+      <h2 id="albumModalTitle">Álbum</h2>
+      <div class="photo-grid" id="albumModalGrid"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="letterModal">
+    <div class="modal-content">
+      <button class="close" data-close="letterModal">×</button>
+      <h2>Para ti, con amor</h2>
+      <p>
+        Mi amor,<br><br>
+        Gracias por cada abrazo, cada risa, cada momento bonito y por formar parte de mi vida.<br><br>
+        Esta web es un pequeño detalle para recordarte todo lo mucho que te quiero. 
+        Gracias por estar, por ser tú y por todo lo que vivimos cada día.<br><br>
+        T'estimo molt. 💗<br><br>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ==============================
+    // 1) FOTOS DEL ÁLBUM
+    // Cambia estas URLs por tus fotos.
+    // Puedes usar nombres de archivo locales como: fotos/recuerdo1.jpg
+    // ==============================
+    const albumData = [
+{
+title: '',
+cover: 'fotos/foto6.jpg',
+photos: [
+'fotos/foto6.jpg',
+'fotos/foto7.jpg'
+]
+},
+{
+title: '',
+cover: 'fotos/foto10.jpg',
+photos: [
+'fotos/foto10.jpg',
+'fotos/foto9.jpg'
+]
+},
+{
+title: '',
+cover: 'fotos/foto11.jpg',
+photos: [
+'fotos/foto11.jpg',
+'fotos/foto12.jpg'
+]
+}
+];
+
+    // ==============================
+    // 2) FECHA DE INICIO DE LA RELACIÓN
+    // ==============================
+    const relationshipStart = new Date('2022-04-15T00:00:00');
+
+    // ==============================
+    // 3) WHATSAPP
+    // Cambia el número si quieres.
+    // Sin espacios suele funcionar mejor.
+    // ==============================
+    const whatsappNumber = '34655012591';
+
+    const puzzleImage = 'fotos/foto8.jpg';
+
+    // ==============================
+    // 5) CUPONES DE LA RULETA
+    // Puedes editar textos y premios.
+    // ==============================
+    const coupons = [
+      { title:'Cena romántica', desc:'Vale por una cena especial juntos donde tú elijas.' },
+      { title:'Tarde de peli', desc:'Cupón para manta, peli, besitos y chuches.' },
+      { title:'Masaje', desc:'Vale por un masaje relajante con mimos incluidos.' },
+      { title:'Comida/cena favorita', desc:'Yo invito/preparo tu comida favorita.' },
+      { title:'Paseo + merienda', desc:'Plan bonito: paseo juntos y merienda.' },
+      { title:'Día sin quejas', desc:'Un día entero solo con buena vibra y amor.' },
+      { title:'Besos infinitos', desc:'Cupón canjeable por lluvia de besos.' },
+      { title:'Plan sorpresa', desc:'Te preparo una cita sorpresa especial.' }
+    ];
+
+    // ==============================
+    // 6) PLAYLIST
+    // Para usar canciones reales, cambia "file" por rutas locales.
+    // También puedes cambiar las portadas.
+    // ==============================
+    const songs = [
+{
+title:'Mi suerte',
+artist:'Morat',
+cover:'fotos/morat.jpg',
+url:'https://youtu.be/sfv0xWONROg?si=FQyNEd4XvHBXr6yx'
+},
+{
+title:'Tu carita',
+artist:'Go Roneo',
+cover:'fotos/tucarita.jpg',
+url:'https://youtu.be/crGCXHHOSmc?si=VBhRtJ9ol4KzInUk'
+},
+{
+title:'La suerte de mi vida',
+artist:'El Canto del Loco',
+cover:'fotos/cantodeloco.jpg',
+url:'https://youtu.be/hEtSAOkjKVI?si=8q3JFbSPg7WH-vX-'
+}
+];
+
+
+    // Decoración de corazones
+    const hearts = document.getElementById('hearts');
+    for(let i=0;i<24;i++){
+      const h = document.createElement('span');
+      h.className = 'heart';
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (10 + Math.random()*10) + 's';
+      h.style.animationDelay = (Math.random()*12) + 's';
+      h.style.transform += ` scale(${0.7 + Math.random()*0.9})`;
+      hearts.appendChild(h);
+    }
+
+    // Álbum
+    const albumCategories = document.getElementById('albumCategories');
+    const albumModal = document.getElementById('albumModal');
+    const albumModalTitle = document.getElementById('albumModalTitle');
+    const albumModalGrid = document.getElementById('albumModalGrid');
+
+    albumData.forEach((cat, index) => {
+      const card = document.createElement('div');
+      card.className = 'album-cat';
+      card.innerHTML = `
+        <img src="${cat.cover}" alt="${cat.title}">
+        <h3>${cat.title}</h3>
+        <button class="btn" data-album="${index}">Ver fotos</button>
+      `;
+      albumCategories.appendChild(card);
+    });
+
+    document.addEventListener('click', (e) => {
+      const albumBtn = e.target.closest('[data-album]');
+      if(albumBtn){
+        const idx = Number(albumBtn.dataset.album);
+        const cat = albumData[idx];
+        albumModalTitle.textContent = cat.title;
+        albumModalGrid.innerHTML = cat.photos.map(p => `<img src="${p}" alt="Foto ${cat.title}">`).join('');
+        albumModal.classList.add('show');
+      }
+      const closeBtn = e.target.closest('[data-close]');
+      if(closeBtn){
+        document.getElementById(closeBtn.dataset.close).classList.remove('show');
+      }
+      if(e.target.classList.contains('modal')){
+        e.target.classList.remove('show');
+      }
+    });
+
+    // Contador
+    const counter = document.getElementById('counter');
+    function updateCounter(){
+      const now = new Date();
+      let years = now.getFullYear() - relationshipStart.getFullYear();
+      let months = now.getMonth() - relationshipStart.getMonth();
+      let days = now.getDate() - relationshipStart.getDate();
+
+      if(days < 0){
+        months--;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        days += prevMonth;
+      }
+      if(months < 0){
+        years--;
+        months += 12;
+      }
+
+      const totalMs = now - relationshipStart;
+      const hours = Math.floor(totalMs / (1000*60*60)) % 24;
+      const minutes = Math.floor(totalMs / (1000*60)) % 60;
+      const seconds = Math.floor(totalMs / 1000) % 60;
+
+      const items = [
+        ['Años', years],
+        ['Meses', months],
+        ['Días', days],
+        ['Horas', hours],
+        ['Minutos', minutes],
+        ['Segundos', seconds]
+      ];
+
+      counter.innerHTML = items.map(([label, value]) => `
+        <div class="counter-box">
+          <strong>${value}</strong>
+          <span>${label}</span>
+        </div>
+      `).join('');
+    }
+    updateCounter();
+    setInterval(updateCounter, 1000);
+
+    // Carta
+    document.getElementById('openLetter').addEventListener('click', () => {
+      document.getElementById('letterModal').classList.add('show');
+    });
+
+    // Dedicatoria + WhatsApp
+    const dedicationText = document.getElementById('dedicationText');
+    const previewMessage = document.getElementById('previewMessage');
+    dedicationText.addEventListener('input', () => {
+      previewMessage.textContent = dedicationText.value || 'te amo';
+    });
+    document.getElementById('sendWhatsapp').addEventListener('click', () => {
+      const message = dedicationText.value.trim() || 'te amo';
+      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    });
+
+    // Puzzle funcional 3x3 (deslizante)
+    document.getElementById('puzzleReference').src = puzzleImage;
+    const puzzleBoard = document.getElementById('puzzleBoard');
+    const puzzleStatus = document.getElementById('puzzleStatus');
+    const size = 3;
+    let puzzleState = [];
+    let emptyIndex = 8;
+
+    function createSolvedState(){
+      return Array.from({length:size*size}, (_,i)=>i);
+    }
+
+    function shufflePuzzle(){
+      puzzleState = createSolvedState();
+      emptyIndex = 8;
+      for(let i=0;i<180;i++){
+        const neighbors = getNeighbors(emptyIndex);
+        const randomNeighbor = neighbors[Math.floor(Math.random()*neighbors.length)];
+        [puzzleState[emptyIndex], puzzleState[randomNeighbor]] = [puzzleState[randomNeighbor], puzzleState[emptyIndex]];
+        emptyIndex = randomNeighbor;
+      }
+      renderPuzzle();
+      puzzleStatus.textContent = 'Ordena la foto moviendo las piezas.';
+    }
+
+    function getNeighbors(index){
+      const row = Math.floor(index/size);
+      const col = index%size;
+      const n=[];
+      if(row>0) n.push(index-size);
+      if(row<size-1) n.push(index+size);
+      if(col>0) n.push(index-1);
+      if(col<size-1) n.push(index+1);
+      return n;
+    }
+
+    function renderPuzzle(){
+      puzzleBoard.innerHTML = '';
+      puzzleState.forEach((piece, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'puzzle-piece';
+        if(piece === size*size-1){
+          btn.classList.add('empty');
+          btn.disabled = true;
+        }else{
+          const row = Math.floor(piece/size);
+          const col = piece%size;
+          btn.style.backgroundImage = `url(${puzzleImage})`;
+          btn.style.backgroundPosition = `${(col/(size-1))*100}% ${(row/(size-1))*100}%`;
+          btn.setAttribute('aria-label', `Pieza ${piece+1}`);
+          btn.addEventListener('click', ()=> movePiece(i));
+        }
+        puzzleBoard.appendChild(btn);
+      });
+    }
+
+    function movePiece(index){
+      if(getNeighbors(index).includes(emptyIndex)){
+        [puzzleState[index], puzzleState[emptyIndex]] = [puzzleState[emptyIndex], puzzleState[index]];
+        emptyIndex = index;
+        renderPuzzle();
+        checkPuzzleWin();
+      }
+    }
+
+    function checkPuzzleWin(){
+      const won = puzzleState.every((v,i)=>v===i);
+      if(won){
+        puzzleStatus.textContent = '¡Lo has completado! Premio ganado: elige luego un cupón de la ruleta 💖';
+      }
+    }
+
+    document.getElementById('shufflePuzzle').addEventListener('click', shufflePuzzle);
+    shufflePuzzle();
+
+    // Ruleta funcional
+    const wheelCanvas = document.getElementById('wheel');
+    const ctx = wheelCanvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const couponResult = document.getElementById('couponResult');
+    const couponList = document.getElementById('couponList');
+    let currentRotation = 0;
+    let spinning = false;
+
+    function renderCouponList(){
+      couponList.innerHTML = coupons.map(c => `
+        <div class="coupon-card">
+          <h3>${c.title}</h3>
+          <p class="muted">${c.desc}</p>
+        </div>
+      `).join('');
+    }
+    renderCouponList();
+
+    function drawWheel(){
+      const colors = ['#ff7aa5','#ffb347','#ffe66d','#8be28b','#7bdff2','#9d8df1','#f7a6ff','#ff8fab'];
+      const total = coupons.length;
+      const center = 150;
+      const radius = 140;
+      const arc = (Math.PI*2)/total;
+      ctx.clearRect(0,0,300,300);
+
+      for(let i=0;i<total;i++){
+        const start = i*arc - Math.PI/2;
+        const end = start + arc;
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(start + arc/2);
+        ctx.fillStyle = '#6a3a49';
+        ctx.font = 'bold 14px Trebuchet MS';
+        ctx.textAlign = 'right';
+        ctx.fillText(coupons[i].title, radius - 18, 5);
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.arc(center, center, 20, 0, Math.PI*2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = '#e95c8a';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+    drawWheel();
+
+    spinBtn.addEventListener('click', () => {
+      if(spinning) return;
+      spinning = true;
+      const selectedIndex = Math.floor(Math.random()*coupons.length);
+      const segment = 360 / coupons.length;
+      const targetAngle = (360 * 6) + (360 - (selectedIndex * segment) - segment/2);
+      currentRotation += targetAngle;
+      wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
+
+      setTimeout(() => {
+        const wonCoupon = coupons[selectedIndex];
+        couponResult.innerHTML = `
+          <h3>🎁 ${wonCoupon.title}</h3>
+          <p>${wonCoupon.desc}</p>
+          <p class="muted">Guárdalo porque ya tienes plan bonito pendiente.</p>
+        `;
+        spinning = false;
+      }, 4900);
+    });
+
+    // Playlist
+    const playlistGrid = document.getElementById('playlistGrid');
+
+playlistGrid.innerHTML = songs.map(song => `
+<div class="song-card">
+
+<img src="${song.cover}" style="
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+">
+
+<h3>
+<a href="${song.url}" target="_blank" style="
+text-decoration:none;
+color:#e95c8a;
+font-weight:bold;
+font-size:18px;">
+${song.title}
+</a>
+</h3>
+
+<p style="
+opacity:0.8;
+font-size:14px;">
+${song.artist}
+</p>
+
+</div>
+`).join('');
+  </script>
+</body>
+</html>
